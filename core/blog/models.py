@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
-from mptt.models import MPTTModel, TreeForeignKey
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -48,17 +47,16 @@ class Post(models.Model):
         return self.title
 
 
-class Comment(MPTTModel):
+class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     name = models.CharField(max_length=50)
     email = models.EmailField()
     content = models.TextField()
     publish = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
 
-    class MPTTMeta:
-        order_insertion_by = ["publish"]
+    class Meta:
+        ordering = ["publish"]
 
     def __str__(self) -> str:
         return f"Comment by {self.name}"

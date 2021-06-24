@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+Blog-D | {{ post.title }}
+{% endblock %}
+
+{% block content %}
+<section class="text-gray-600 body-font overflow-hidden">
+  <div class="container px-5 pt-52 md:pt-48 pb-16 mx-auto">
+    <div class="flex flex-wrap -m-12">
+      <div class="px-12 w-full flex flex-col items-start">
+        <span
+          class="inline-block py-1 px-2 rounded bg-indigo-50 text-indigo-500 text-xs font-medium tracking-widest">{{post.category|title}}</span>
+        <h2 class="sm:text-3xl text-2xl title-font font-medium text-gray-900 mt-4 mb-4">{{post.title}}</h2>
+        <p class="leading-relaxed mb-8">{{post.content|safe}}</p> <!-- safe for rendering html -->
+
+        <div class="flex items-center flex-wrap py-4 my-4 border-b-2 border-gray-800 border-opacity-75 w-full">
+          <a class="inline-flex items-center">
+            <!-- <img alt="blog" src="https://dummyimage.com/104x104"
+              class="w-7 h-7 rounded-full flex-shrink-0 object-cover object-center"> -->
+            <span class="flex-grow flex flex-col">
+              <span class="title-font font-medium text-gray-900">{{post.author}}</span>
+            </span>
+          </a>
+          <a href="#comment" class="text-gray-500 inline-flex items-center ml-auto leading-none text-sm">
+            <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+              stroke-linejoin="round" viewBox="0 0 24 24">
+              <path
+                d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z">
+              </path>
+            </svg>
+            {% with comments.count as totol_comment %}
+            {{ totol_comment }} comment{{ total_comments|pluralize }}
+            {% endwith %}
+          </a>
+        </div>
+      </div>
+
+
+<section class="rounded-b-lg w-full px-12">
+    <!--     comment-->
+    {% for comment in comments %}
+    <div class="bg-white rounded-lg p-3  flex flex-col items-start shadow-lg mb-4">
+      <div class="mr-2">
+          <h3 class="text-blue-600 font-medium text-md text-left">{{ comment.name }}</h3>
+          <p class="font-semibold text-xs">{{ comment.publish }}</p>
+      </div>
+      <div class="mt-2">
+        <p style="width: 90%" class="text-gray-600 text-md text-left">
+          {{ comment.content|linebreaks }}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+</section>
+
+<section id="comment" class="w-full mt-5">
+    <h2 class="pl-14 text-gray-900 te xt-xl title-font font-semibold subpixel-antialiased">Make a new comment</h2>
+    <form method="POST">
+    {% csrf_token %}
+      <div class="px-12 w-full flex flex-wrap">
+        <div class="p-2 w-1/2">
+          <div class="relative">
+            <label for="name" class="leading-7 text-sm text-gray-600">{{ comment_form.name.label_tag }}</label>
+            {{ comment_form.name }}
+          </div>
+        </div>
+        <div class="p-2 w-1/2">
+          <div class="relative">
+            <label for="email" class="leading-7 text-sm text-gray-600">{{ comment_form.email.label_tag }}</label>
+            {{ comment_form.email }}
+          </div>
+        </div>
+        <div class="p-2 w-full">
+          <div class="relative">
+            <label for="message" class="leading-7 text-sm text-gray-600">{{ comment_form.content.label_tag }}</label>
+            {{ comment_form.content }}
+          </div>
+        </div>
+        <div class="p-2 w-full">
+          <button type="submit"
+            class="flex mx-auto text-white bg-indigo-500 border-0 py-1.5 px-8 focus:outline-none hover:bg-indigo-600 rounded text-base">Submit</button>
+        </div>
+      </div>
+    </form>
+</section>
+    
+    </div>
+  </div>
+</section>
+
+
+{% endblock %}
